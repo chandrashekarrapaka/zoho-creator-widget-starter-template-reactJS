@@ -81,7 +81,7 @@ function Container() {
     };
 
     fetchData();
-  }, [timeIn]);
+  }, [timeIn,currentPlantIndex ]);
  
   const fetchProfile = async () => {
     try {
@@ -116,9 +116,9 @@ function Container() {
       let kpidisconnectednew = 0;
       plantsData[currentPlantIndex].forEach((mon) => {
         mon.monitors.forEach((ele)=>{
-         // console.log(ele.status,mon.name);
+          console.log(ele.status,mon.name);
           if(ele.status==5||ele.status==undefined){
-          //  console.log(ele.status,mon.name);
+            console.log("5 as Disconnect"+ele.status,mon.name);
             kpidisconnectednew++;
             
           }

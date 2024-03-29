@@ -39,7 +39,7 @@ export async function Plants() {
     const orgidAll = queryParams.PlantId.split(",");
 
     const fetchPlantsData = async () => {
-      ////console.log("functioncalled"+new Date().getMinutes);
+      console.log("Fetching plants data at:", new Date());
       try {
         await Promise.all(orgidAll.map(async (orgid) => {
           const plantsResponse = await fetch(`https://api.infinite-uptime.com/api/3.0/idap-api/plants/${orgid}/machine-group-stats`, {
@@ -86,8 +86,8 @@ export async function Plants() {
     await fetchPlantsData();
 
     
-    //intervalId = setInterval(fetchPlantsData, 30000);
-
+    intervalId = setInterval(fetchPlantsData, 30000);
+   
     return [arrayOfMachines, apicallstatus];
 
   } catch (error) {
