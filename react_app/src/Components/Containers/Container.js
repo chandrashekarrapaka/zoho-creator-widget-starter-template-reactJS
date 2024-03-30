@@ -81,7 +81,7 @@ function Container() {
     };
 
     fetchData();
-  }, [timeIn,currentPlantIndex ]);
+  }, [timeIn ]);
  
   const fetchProfile = async () => {
     try {
@@ -96,7 +96,7 @@ function Container() {
         };
         const response = await window.ZOHO.CREATOR.API.getAllRecords(config);
         const idx = response.data[0].PlantPattern;
-        console.log(idx);
+       // console.log(idx);
         return idx;
     } catch (error) {
         console.error(error);
@@ -104,34 +104,27 @@ function Container() {
         return null; // Or any appropriate value indicating error
     }
 };
+
+
+// Call calculateKPIs whenever needed
+useEffect(() => {
+  if (autoPagination && plantsData.length > 0 && !PlantSelection) {
+    const currentPlant = plantsData[currentPlantIndex];
+    
+    
+  }
+}, [currentPage, currentPlantIndex, plantsData, autoPagination, PlantSelection]);
+
+
   useEffect(() => {
     let timeout;
 
     if (autoPagination && plantsData.length > 0&&PlantSelection==false) {
       const currentPlant = plantsData[currentPlantIndex];
       // console.log(currentPlantIndex);
-      setKpimachines(plantsData[currentPlantIndex].length);
-     // 
-      let kpimonitorsnew = 0;
-      let kpidisconnectednew = 0;
-      plantsData[currentPlantIndex].forEach((mon) => {
-        mon.monitors.forEach((ele)=>{
-          console.log(ele.status,mon.name);
-          if(ele.status==5||ele.status==undefined){
-            console.log("5 as Disconnect"+ele.status,mon.name);
-            kpidisconnectednew++;
-            
-          }
-          if(ele.status==6){
-            console.log("Purple");
-          }
-        }) 
-        kpimonitorsnew += mon.monitors.length;
-      });
-     // console.log(currentPlantIndex);
-      setKpiDisconnected(kpidisconnectednew);
-      setKpimonitors(kpimonitorsnew);
+     
 
+      
       const totalPages = Math.ceil(currentPlant?.length / itemsPerPage);
 
       if (currentPage > totalPages ) {
@@ -155,15 +148,14 @@ function Container() {
     
 
     return () => clearTimeout(timeout);
-  }, [currentPage, currentPlantIndex, plantsData, autoPagination]);
+  }, [currentPage, currentPlantIndex, plantsData, autoPagination,PlantSelection]);
 
-  const handleNextPlant = () => {
+  const handleNextPlant = (plantOnNext) => {
+    //console.log(plantOnNext);
     const nextPage = currentPage + 1;
-  
-    
-      
-      // If we're at the end of the current plant, switch to the next plant
       const nextPlantIndex = (currentPlantIndex + 1) % plantsData.length;
+    //console.log(currentPlantIndex);
+
       if(nextPlantIndex>plantsData.length-1){
       setCurrentPlantIndex(nextPlantIndex);
       setCurrentPage(1);
@@ -171,26 +163,10 @@ function Container() {
         setCurrentPlantIndex(nextPlantIndex);
         setCurrentPage(1);
       } // Reset currentPage for the new plant
-      const currentPlant = plantsData[currentPlantIndex];
-      setKpimachines(plantsData[currentPlantIndex].length);
-
-      let kpimonitorsnew = 0;
-      let kpidisconnectednew = 0;
-
-      plantsData[currentPlantIndex].forEach((mon) => {
-        
-        mon.monitors.forEach((ele)=>{
-          if(ele.status==5){
-           // console.log(ele.status,currentPlantIndex);
-            kpidisconnectednew++;
-            
-          }
-        })
-        kpimonitorsnew += mon.monitors.length;
-      });
       //console.log(currentPlantIndex);
-      setKpiDisconnected(kpidisconnectednew);
-      setKpimonitors(kpimonitorsnew);
+      const currentPlant = plantsData[currentPlantIndex];
+     // console.log(plantsData[currentPlantIndex][0].plantName)
+      
     
   };
   //console.log(currentPlantIndex+""+kpidisconnected);
@@ -212,6 +188,9 @@ function Container() {
 
   const handleCheck = () => {
     setAutoPagination((prevState) => !prevState);
+    
+    console.log(currentPlantIndex);
+
   }
  
  
@@ -244,7 +223,7 @@ function Container() {
                       <p className="mb-0 fs-16 text-gray" onClick={(e)=>{handleNextPlant(currentPlantIndex)}}> Coming Next: <strong className="text-primary" style={{ cursor: "pointer" }} >{plantsData[currentPlantIndex + 1] !== undefined ? plantsData[currentPlantIndex + 1][0].plantName : plantsData[0][0].plantName}</strong></p>
                     </div>
 
-                    <Header kpidisconnected={kpidisconnected} kpimachines={kpimachines} kpimonitors={kpimonitors} currentPlant={currentPlant} />
+                    <Header  currentPlant={currentPlant} />
                    
                     <Plant currentItems={currentItems} NextPlant={plantsData[currentPlantIndex + 1] !== undefined ? plantsData[currentPlantIndex + 1][0].plantName : plantsData[0][0].plantName} />
                     

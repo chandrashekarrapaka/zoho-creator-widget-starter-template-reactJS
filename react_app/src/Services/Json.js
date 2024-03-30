@@ -86,7 +86,7 @@ export async function Plants() {
     await fetchPlantsData();
 
     
-    intervalId = setInterval(fetchPlantsData, 30000);
+    //intervalId = setInterval(fetchPlantsData, 30000);
    
     return [arrayOfMachines, apicallstatus];
 

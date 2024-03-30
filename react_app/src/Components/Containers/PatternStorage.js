@@ -39,7 +39,7 @@ const PatternStorage = (props) => {
       
             const access = window.ZOHO.CREATOR.API.getAllRecords(config).then(function (response) {
             const idx=response.data[0].ID;
-            console.log(idx);
+          //  console.log(idx);
             const formData={
                 "data": {
                   "PlantPattern": JSON.stringify(newPattern)
@@ -53,7 +53,7 @@ const PatternStorage = (props) => {
               };
               const acce=window.ZOHO.CREATOR.API.updateRecord(config).then(function(response){
                
-            console.log(response);
+           // console.log(response);
 
                 if(response.code == 3000 && response.message == "Data Updated Successfully"){
                    console.log("working");
