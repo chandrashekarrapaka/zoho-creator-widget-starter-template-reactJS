@@ -109,24 +109,7 @@ function Container() {
 
     if (autoPagination && plantsData.length > 0&&PlantSelection==false) {
       const currentPlant = plantsData[currentPlantIndex];
-      setKpimachines(plantsData[currentPlantIndex].length);
-
-      let kpimonitorsnew = 0;
-      let kpidisconnectednew = 0;
-      plantsData[currentPlantIndex].forEach((mon) => {
-        mon.monitors.forEach((ele)=>{
-          if(ele.status==5 && ele.status!=undefined){
-           // console.log(ele.status,currentPlantIndex);
-            kpidisconnectednew++;
-            
-          }
-        }) 
-        kpimonitorsnew += mon.monitors.length;
-      });
-     // console.log(currentPlantIndex);
-      setKpiDisconnected(kpidisconnectednew);
-      setKpimonitors(kpimonitorsnew);
-
+      
       const totalPages = Math.ceil(currentPlant?.length / itemsPerPage);
      // console.log("Current Plant Index:", currentPlantIndex);
       //console.log("Current Page:", currentPage);
@@ -169,23 +152,7 @@ function Container() {
         setCurrentPage(1);
       } // Reset currentPage for the new plant
       const currentPlant = plantsData[currentPlantIndex];
-      setKpimachines(plantsData[currentPlantIndex].length);
-
-      let kpimonitorsnew = 0;
-      let kpidisconnectednew=0;
-      plantsData[currentPlantIndex].forEach((mon) => {
-        mon.monitors.forEach((ele)=>{
-          if(ele.status==5){
-           // console.log(ele.status,currentPlantIndex);
-            kpidisconnectednew++;
-            
-          }
-        }) 
-        kpimonitorsnew += mon.monitors.length;
-      });
-     // console.log(currentPlantIndex);
-      setKpiDisconnected(kpidisconnectednew);
-      setKpimonitors(kpimonitorsnew);
+      
   };
   const handlePageChange = (pageNumber) => {
     const totalPages = Math.ceil(plantsData[currentPlantIndex].length / itemsPerPage);
@@ -236,7 +203,7 @@ function Container() {
                       <p className="mb-0 fs-16 text-gray" onClick={(e)=>{handleNextPlant(currentPlantIndex)}}> Coming Next: <strong className="text-primary" style={{ cursor: "pointer" }} >{plantsData[currentPlantIndex + 1] !== undefined ? plantsData[currentPlantIndex + 1][0].plantName : plantsData[0][0].plantName}</strong></p>
                 </div>
 
-                    <Header kpidisconnected={kpidisconnected} kpimachines={kpimachines} kpimonitors={kpimonitors} currentPlant={currentPlant} />
+                    <Header currentPlant={currentPlant} />
                    
                     <Plant currentItems={currentItems} NextPlant={plantsData[currentPlantIndex + 1] !== undefined ? plantsData[currentPlantIndex + 1][0].plantName : plantsData[0][0].plantName} />
                     
