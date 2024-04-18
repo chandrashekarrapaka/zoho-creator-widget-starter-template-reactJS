@@ -30,7 +30,33 @@ function Header(prop) {
   
   const [kipobj, setKipobj] = useState(initialKipobj);
 
- // console.log(prop.kpidisconnected);
+
+  const calculateKPIs = (plantData) => {
+    let totalMachines = 0;
+    let totalMonitors = 0;
+    let totalDisconnected = 0;
+
+    if (Array.isArray(plantData)) {
+      totalMachines += plantData.length;
+
+      plantData.forEach((mon) => {
+        totalMonitors += mon.monitors.length;
+        mon.monitors.forEach((ele) => {
+          if (ele.status === 5 || ele.status === undefined) {
+            totalDisconnected++;
+          }
+        });
+      });
+    }
+
+    return {
+      totalMachines,
+      totalMonitors,
+      totalDisconnected,
+    };
+  };
+
+  // console.log(prop.kpidisconnected);
 
   useEffect(() => {
     const fetchPlantDetails = async () => {
@@ -50,51 +76,52 @@ function Header(prop) {
         let  kpidata = await kpidatafinal.json();
         let kpidatalength=kpidata.data.length;
         //console.log("downtime"+JSON.stringify(kpidatalength));
+       const { totalMachines, totalMonitors, totalDisconnected } = calculateKPIs(prop.currentPlant);
         
         
         if(kpidatalength!=0){
-        const updatedKipobj = {
-          ...kipobj,
-          kpi4: {
-            ...kipobj.kpi4,
-            title: JSON.stringify(kpidata.data[0].completedCount),
-          },
-          kpi5: {
-            ...kipobj.kpi5,
-            title:JSON.stringify(kpidata.data[0].downtime),
-          },
-          kpi2:{
-            ...kipobj.kpi2,
-            title:
-            JSON.stringify(prop.kpimachines)
-          },
-          kpi3: {
-            ...kipobj.kpi3,
-            title:
-            JSON.stringify(kpidata.data[0].newCount+kpidata.data[0].completedCount)
-          },
-          kpi6: {
-            ...kipobj.kpi6,
-            title:
-            JSON.stringify(prop.kpidisconnected)
-          },
-         //totaldevicesinstalled
-          kpi1: {
-            ...kipobj.kpi1,
-            title:
-            JSON.stringify(prop.kpimonitors)
-          }
-        };
+          const updatedKipobj = {
+            ...kipobj,
+            kpi4: {
+              ...kipobj.kpi4,
+              title: JSON.stringify(kpidata.data[0].completedCount),
+            },
+            kpi5: {
+              ...kipobj.kpi5,
+              title:JSON.stringify(kpidata.data[0].downtime),
+            },
+            kpi2:{
+              ...kipobj.kpi2,
+              title:
+              JSON.stringify(totalMachines)
+            },
+            kpi3: {
+              ...kipobj.kpi3,
+              title:
+              JSON.stringify(kpidata.data[0].newCount+kpidata.data[0].completedCount)
+            },
+            kpi6: {
+              ...kipobj.kpi6,
+              title:
+              JSON.stringify(totalDisconnected)
+            },
+           //totaldevicesinstalled
+            kpi1: {
+              ...kipobj.kpi1,
+              title:
+              JSON.stringify(totalMonitors)
+            }
+          };
         
        setKipobj(updatedKipobj);
       }
       else{
-        initialKipobj.kpi2.title=JSON.stringify(prop.kpimachines);
-        initialKipobj.kpi1.title=JSON.stringify(prop.kpimonitors);
+        initialKipobj.kpi2.title=JSON.stringify(totalMachines);
+        initialKipobj.kpi1.title=JSON.stringify(totalMonitors);
         initialKipobj.kpi3.title='-';
         initialKipobj.kpi4.title='-';
         initialKipobj.kpi5.title='-';
-        initialKipobj.kpi6.title= JSON.stringify(prop.kpidisconnected);
+        initialKipobj.kpi6.title= JSON.stringify(totalDisconnected);
         setKipobj(initialKipobj); 
       }
         

@@ -18,10 +18,7 @@ function Container() {
   const [plantsData, setPlantsData] = useState([]);
   const [plantDrsStatus, setPlantDrsStatus] = useState([]);
   const [currentPlantIndex, setCurrentPlantIndex] = useState(0);
-  const [zoomLevel, setZoomLevel] = useState(0);
-  const [kpimachines, setKpimachines] = useState(0);
-  const [kpidisconnected, setKpiDisconnected] = useState(0);
-  const [kpimonitors, setKpimonitors] = useState(0);
+ 
   const [noData, setNoData] = useState('');
   const [apicall, setApiCall] = useState(true);
   const [autoPagination, setAutoPagination] = useState(true);
@@ -112,23 +109,7 @@ function Container() {
     if (autoPagination && plantsData.length > 0 && PlantSelection == false) {
       const currentPlant = plantsData[currentPlantIndex];
       // console.log(currentPlantIndex);
-      setKpimachines(plantsData[currentPlantIndex].length);
-      // 
-      let kpimonitorsnew = 0;
-      let kpidisconnectednew = 0;
-      plantsData[currentPlantIndex].forEach((mon) => {
-        mon.monitors.forEach((ele) => {
-          if (ele.status == 5 || ele.status == undefined) {
-            //console.log(ele.status,currentPlantIndex);
-            kpidisconnectednew++;
-
-          }
-        })
-        kpimonitorsnew += mon.monitors.length;
-      });
-      // console.log(currentPlantIndex);
-      setKpiDisconnected(kpidisconnectednew);
-      setKpimonitors(kpimonitorsnew);
+      
 
       const totalPages = Math.ceil(currentPlant?.length / itemsPerPage);
 
@@ -170,26 +151,7 @@ function Container() {
       setCurrentPage(1);
     } // Reset currentPage for the new plant
     const currentPlant = plantsData[currentPlantIndex];
-    setKpimachines(plantsData[currentPlantIndex].length);
-
-    let kpimonitorsnew = 0;
-    let kpidisconnectednew = 0;
-
-    plantsData[currentPlantIndex].forEach((mon) => {
-
-      mon.monitors.forEach((ele) => {
-        if (ele.status == 5) {
-          // console.log(ele.status,currentPlantIndex);
-          kpidisconnectednew++;
-
-        }
-      })
-      kpimonitorsnew += mon.monitors.length;
-    });
-    //console.log(currentPlantIndex);
-    setKpiDisconnected(kpidisconnectednew);
-    setKpimonitors(kpimonitorsnew);
-
+    
   };
   //console.log(currentPlantIndex+""+kpidisconnected);
   const handlePageChange = (pageNumber) => {
@@ -249,7 +211,7 @@ function Container() {
                       <p className="mb-0 fs-16 text-gray" onClick={(e) => { handleNextPlant(currentPlantIndex) }}> Coming Next: <strong className="text-primary" style={{ cursor: "pointer" }} >{plantsData[currentPlantIndex + 1] !== undefined ? plantsData[currentPlantIndex + 1][0].plantName : plantsData[0][0].plantName}</strong></p>
                     </div>
 
-                    <Header kpidisconnected={kpidisconnected} kpimachines={kpimachines} kpimonitors={kpimonitors} currentPlant={currentPlant} />
+                    <Header  currentPlant={currentPlant} />
 
                     <Plant currentItems={currentItems} NextPlant={plantsData[currentPlantIndex + 1] !== undefined ? plantsData[currentPlantIndex + 1][0].plantName : plantsData[0][0].plantName} plantDrsStatus={plantDrsStatus} />
 
